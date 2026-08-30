@@ -32,7 +32,7 @@ exceedance_calc as (
 )
 
 select
-    {{ dbt_utils.generate_surrogate_key(['account_id', 'reading_date', 'licence_id']) }} as compliance_event_id,
+    md5(account_id || '-' || reading_date::varchar || '-' || licence_id) as compliance_event_id,
     account_id,
     licence_id,
     licence_number,
