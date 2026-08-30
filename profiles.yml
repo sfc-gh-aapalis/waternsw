@@ -1,0 +1,12 @@
+waternsw:
+  target: prod
+  outputs:
+    prod:
+      type: snowflake
+      account: SFSEAPAC-AAPALIS_AZURE1
+      user: "{{ env_var('SNOWFLAKE_USER', 'AAPALIS') }}"
+      authenticator: externalbrowser
+      database: WATERNSW
+      warehouse: COMPUTE_WH
+      schema: PUBLIC
+      role: SYSADMIN

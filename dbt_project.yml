@@ -1,0 +1,16 @@
+name: waternsw
+version: '1.0.0'
+profile: waternsw
+
+model-paths: ["models"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  waternsw:
+    staging:
+      +schema: SILVER
+      +materialized: table
+    marts:
+      +schema: GOLD
+      +materialized: table

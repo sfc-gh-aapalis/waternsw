@@ -1,0 +1,82 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: WATERNSW
+    schema: BRONZE
+    tables:
+      - name: WAS_METERED_USAGE_RAW
+      - name: DAS_EVENTS_RAW
+
+  - name: silver_source
+    database: WATERNSW
+    schema: SILVER
+    tables:
+      - name: WAS_ACCOUNTS_VALIDATED
+      - name: WLS_LICENCES_VALIDATED
+      - name: WLS_ALLOCATIONS_VALIDATED
+
+  - name: gold_source
+    database: WATERNSW
+    schema: GOLD
+    tables:
+      - name: DIM_CATCHMENTS
+
+models:
+  - name: stg_metered_usage
+    description: Regularised hourly metered usage — quality coded, deduped
+    columns:
+      - name: reading_id
+        tests: [unique, not_null]
+      - name: account_id
+        tests: [not_null]
+      - name: volume_ml
+        tests:
+          - not_null
+
+  - name: stg_accounts
+    description: Validated water accounts with spatial coordinates
+    columns:
+      - name: account_id
+        tests: [unique, not_null]
+      - name: catchment_code
+        tests:
+          - accepted_values:
+              values: ['BDR', 'NAM', 'MAC', 'LAC', 'MUR']
+
+  - name: stg_licences
+    description: Validated water access licences
+    columns:
+      - name: licence_id
+        tests: [unique, not_null]
+
+  - name: fact_water_usage
+    description: Curated daily water usage fact — joined to licence allocations
+    columns:
+      - name: account_id
+        tests: [not_null]
+      - name: daily_usage_ml
+        tests:
+          - not_null
+
+  - name: fact_compliance_events
+    description: Compliance events where daily usage exceeds allocation
+    columns:
+      - name: compliance_event_id
+        tests: [unique, not_null]
+      - name: severity
+        tests:
+          - accepted_values:
+              values: ['CRITICAL', 'HIGH', 'MODERATE', 'LOW']
+
+  - name: dim_licences
+    description: Licence dimension with allocation and catchment context
+    columns:
+      - name: licence_id
+        tests: [unique, not_null]
+
+  - name: dim_catchments
+    description: Catchment reference dimension
+    columns:
+      - name: catchment_code
+        tests: [unique, not_null]
