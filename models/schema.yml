@@ -42,8 +42,7 @@ models:
       - name: catchment_code
         tests:
           - accepted_values:
-              arguments:
-                values: ['BDR', 'NAM', 'MAC', 'LAC', 'MUR']
+              values: ['BDR', 'NAM', 'MAC', 'LAC', 'MUR']
 
   - name: stg_licences
     description: Validated water access licences
@@ -68,8 +67,7 @@ models:
       - name: severity
         tests:
           - accepted_values:
-              arguments:
-                values: ['CRITICAL', 'HIGH', 'MODERATE', 'LOW']
+              values: ['CRITICAL', 'HIGH', 'MODERATE', 'LOW']
 
   - name: dim_licences
     description: Licence dimension with allocation and catchment context
